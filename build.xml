@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IvySample" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <path id="ivy.lib.path">
+	<fileset dir="${basedir}/support/apache-ivy" includes="*.jar" />
+  </path>
+
+  <target name="init-ivy">
+	    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+		<ivy:buildlist reference="build-path">
+	      <fileset dir="projects" includes="*/build.xml"/>
+	    </ivy:buildlist>
+  </target>
+
+  <target name="compile-projects" depends="init-ivy" description="find all sub projects and build them">
+	 <subant target="publish" buildpathref="build-path" />
+  </target>
+
+  <target name="clean" depends="init-ivy" description="find all sub projects and build them">
+	 <subant target="clean" buildpathref="build-path" />
+  </target>
+  
+  <target name="all" depends="compile-projects" description="run full build" />
+</project>

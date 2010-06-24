@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="build-template" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <target name="all" depends="publish"/>
+
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="build.classes.dir" value="${build.dir}/classes" />
+	<property name="dist.dir" value="${build.dir}/dist" />
+	
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="src.java.dir" value="${src.dir}/java" />
+	
+	<property name="lib.dir" value="${basedir}/lib" />
+	
+	<target name="retrieve">
+		<ivy:retrieve log="quiet"/>
+		<mkdir dir="${basedir}/lib" />
+		<path id="compile.classpath">
+	      <fileset dir="${basedir}/lib" includes="*.jar" />
+	    </path>	    
+	</target>
+    <target name="compile" depends="retrieve">
+		<mkdir dir="${build.dir}/classes"  />
+        <echo message="${ant.project.name} - build-template.compile"/>
+	    <javac srcdir="${src.java.dir}" destdir="${build.classes.dir}" fork="true" >
+	      <classpath refid="compile.classpath"/>
+	    </javac>	
+    </target>
+
+	<target name="package" depends="compile">
+		<mkdir dir="${dist.dir}"  />
+	    <jar destfile="${dist.dir}/${ant.project.name}.jar"
+		       basedir="${build.dir}/classes"
+		  />
+	</target>
+    <target name="publish" depends="package">
+        <echo message="${ant.project.name} - build-template.publish"/>		
+		<ivy:publish resolver="local" artifactspattern="${dist.dir}/[artifact].[ext]" update="true"/>
+    </target>
+
+	<target name="clean" description="Clean all build artifacts and downloaded dependencies">
+		<echo message="${ant.project.name} - build-template.clean"/>        
+		<delete dir="${build.dir}" />
+		<delete dir="${lib.dir}" />		
+	</target>
+</project>

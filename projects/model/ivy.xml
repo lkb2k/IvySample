@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+    <info organisation="com.kgawa" module="ivy-sample-model"/>
+    <dependencies>
+        <dependency org="junit" name="junit" rev="4.7"/>
+    </dependencies>
+</ivy-module>
